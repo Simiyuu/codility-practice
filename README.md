@@ -74,3 +74,77 @@ Coverting the integer into a binary string and storing the resulting chunk list 
 | `32` | `100000` | `0` | Trailing zeros with no closing `1` |
 | `1041` | | `10000010001` | `5` | Two gaps (lengths 5 and 3); returns maximal |
 | `2147483647` | $31$ consecutive `1`s | `0` | Maximum 32-bit positive signed integer |
+
+---
+
+## 6. Optimal Bitwise Solution ($0(1)$ Auxiliary Space) while string manipulation is intuitive in Python, interviewers frequently evaluate your ability to solve low-level problems without allocating additional heap memory. The bitwise approachbinary digits directly using bit masks and arithmetic shifts.
+
+### Implementation
+
+```python
+def solution_bitwise(N):
+    max_gap = 0
+    current_gap = 0
+    counting = False
+
+    while N > 0 :
+        # Extract least significant bit
+        bit = N & 1
+
+        if bit == 1:
+            if counting:
+                if current_gap > max_gap:
+                    max_gap = current_gap
+
+            else: 
+                # First boundary found; begin gap tracking
+                counting = True
+
+            # Reset gap counter on every encountered 1
+            current_gap = 0
+
+        else:
+            # Increment current gap only if inside an active boundary
+            if counting:
+                current_gap += 1
+
+        # Shift bits rightwars by 1 position
+        N >>= 1
+
+    return max_gap
+```
+
+---
+
+### Step-by-Step Bitwise Mechanics
+
+1. **Extracting the Least Significant Bit (`bit = N & 1`):**
+  - Applying bitwise AND with `1` isolates the rightmost bit of `N`.
+  - If `N` is even, the least significant bit is `0`. If `N` is odd, it is `1`.
+
+2. **The `counting` State Flag:**
+  - Trailing zeros (e.g., `32 -> 100000`) do not form a valid gap because they lack a trailing closing `1`.
+  - By initializing `counting = False`, all rightmost zeros are ignored until the first `1` bit flips `counting = True`.
+
+3. **Resetting on Boundary ('current_gap = 0'):**
+  - Whenever `bit == 1`, any active gap is checked against `max_gap`.
+  - `current_gap` is then reset to `0` so the next potential sequemce can be measured independently.
+
+4. **Register Shifting (`N >>= 1`):**
+  - The in-place right shift operator moves all bits one position to the right, discarding the bit just evaluated.
+  - This executes as single ALU CPU cycle rather than an expensive string slicing or re-allocation operation.
+
+  ---
+
+  ### Method Comparison
+
+  | Metric | String Manipulation Approach | Bitwise Shift Approach |
+  | :--- | :--- | :--- |
+  | **Time Complexity** | $0(\log N)$ | $0(\log N)$ |
+  | **Space Complexity** | $0(\log N)$ (Heap allocation)| $0(1)$ (Constant registers) |
+  | **Data Structures** | Strings, Lists (`split`, `rstrip`) | Primitives (`int`, `bool`) |
+  | **Best Used For** | Rapid prototyping & Pythonic code | Embedded systems, systems security, hardware constraints |
+  
+
+
+            

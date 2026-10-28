@@ -144,7 +144,76 @@ def solution_bitwise(N):
   | **Space Complexity** | $0(\log N)$ (Heap allocation)| $0(1)$ (Constant registers) |
   | **Data Structures** | Strings, Lists (`split`, `rstrip`) | Primitives (`int`, `bool`) |
   | **Best Used For** | Rapid prototyping & Pythonic code | Embedded systems, systems security, hardware constraints |
-  
 
 
-            
+  ---
+
+  # Codility Lesson 2: Arrays
+
+  ## Problem 1: OddOccurrencesInArray
+
+  ### 1. Problem Description
+  A non-empty array `A` consisting of `N` integers is given. The arrray contains an odd number of elements, and each element can be paired another element of the same value, except for one element that is left unpaired.
+
+  - **Goal:** Find and return the unpaired element.
+  - **Constraints:**
+    - $N$ is an odd integer within the range $[1..1,000,000]$.
+    - Each element of array $A$ is an integer within the range $[1..1,000,000,000]$.
+    - Time Complexity Target $0(N)$.
+    - Space Complexity Target: $0(1)$ auxiliary space.
+
+---
+
+### 2. Optimal Implementation (Bitwise XOR)
+
+```python
+def solution(A):
+    unpaired = 0
+    for number in A:
+        unpaired ^= number
+    return unpaired
+```
+
+---
+
+### 3. Mathematical & Algorithmic Mechanics
+
+Th solution relies on the fundamental algebraic propertiesof the bitwise XOR (`^`) operator:
+
+1. **Identify Property ($X \oplus 0 = x$):**
+  - XORing any integer with `0` leaves the integer unchanged.
+  - Initialization `unpaired = 0` provides a neutral baseline.
+
+2. **Self-Inverse Property ($X \oplus x = 0$):**
+  - Any number XORed with itself produces `0` because matching bit positions result in `0`.
+  - Every paired cancels out completely.
+
+3. **Commutative & Associative Properties:**
+  - The order of operations does not affect teh final result:
+  $$(A \oplus B) \oplus A = (A \oplus A) \oplus B = 0 \oplus B == B$$
+  - Regardless of where the duplicate elements are plassed across the array, every duplicate pair evaluates to `0`.
+
+4. **Final Accumulation:**
+  - After traversing all elements, all paired numbers collapsa to `0`, leaving only:
+   $$\text{unpaired} = 0 \oplus \text{target = \text{target}}$$
+
+   ---
+
+### 5. Architectural Comparison with Alternatives
+
+| Approach | Time Complexity | Space Complexity | Tradeoffs & Limitations |
+| :--- | :--- | :--- | :--- |
+| **Bitwise XOR Reduction** | $0(N)$ | $0(1)$ | Optimal in both time and memory; handles $10^6$ items natively. |
+| **Hash Map / Frequency Counter** | $0(N)$ | $0(N)$ | Requires allocating dynamic heap memeory for up to $N/2$ unique keys. |
+| **Sorting (`A.sort()`)** | $0(N log N$)| $0(1)$ to $0(N)$ | Modifies array in place; exceeds $0(N)$ runtime limit on larg arrays. |
+
+---
+
+### 6. Critical Edge Cases Handled
+
+| Input Array (`A`) | Expected Output | Logic / Reason |
+| :--- | :--- | :--- |
+|`[42]` | `42` | Single-element array; minimum possible odd length ($N = 1$). |
+| `[9, 3, 9, 3, 9, 7, 9]` | `7` | Multiple pairs of the same value (`9` appears 4 times); `7` remains unpaired. |
+| `[1000, 500, 1000]` | `500` | Symmetrical pairs surrounding the target value. |
+| `[1, 2, 3, 2, 1]` | `3` | Odd array with pairs separated across the boundaries. |

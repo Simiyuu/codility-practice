@@ -217,3 +217,48 @@ Th solution relies on the fundamental algebraic propertiesof the bitwise XOR (`^
 | `[9, 3, 9, 3, 9, 7, 9]` | `7` | Multiple pairs of the same value (`9` appears 4 times); `7` remains unpaired. |
 | `[1000, 500, 1000]` | `500` | Symmetrical pairs surrounding the target value. |
 | `[1, 2, 3, 2, 1]` | `3` | Odd array with pairs separated across the boundaries. |
+
+## Problem 2: CyclicRotation
+
+### 1. Problem Description
+An array `A` consisting of `N` integers is given. Rotation of the array means that each element is shifted right by one index, and the last element of the array is moved to the first place. The goal is to rotate array `A` $K$ times.
+
+- **Input Constraints:**
+ - $N$ and $K$ are integers within the range $[0 \dots 100]$.
+- Each element of array $A$ is an integer within the range $[-1, 000 \dots 1,000]$.
+
+---
+
+### 2. Algorithmic Intution & Mechanical Breakdown
+
+1. **Guard Condition (Zero or Single Elements):**
+  - If the array has 0 or 1 element (`len(A) <= 1`), no rotation changes the state, Returning early avoids unnecessary allocations and prevents a `ZeroDivisionError` during modulo arithmetic.
+2. **Cycle Optimization ($K \pmod N$):**
+  - Rotating an array of length $N$ by $N$ times results in the original array.
+  - When $K \ge N$. effective shifts equal `k = K % N`. If `k == 0`, the array reamins identical.
+3. **Array Slicing:**
+  - The last `k` elements move to the front: `A[-k:]`.
+  - The first `N - k` elements follow: `A[:-k]`.
+  - Result: `A[-k:] + A[:-K]`.
+
+---
+
+### 3. Complexity Matrix
+
+| Metric | Complexity | Rationale|
+| :--- | :--- | :---|
+| **Time Complexity** | **$0(N)$**| Modulo arithmetic is $0(1)$. Slicing and concatenating two sublists requires shallow copying $N$ references. |
+| **Space Complexity*| **$0(N)$**| A new list of length $N$ is created and returned to fulfil the  Codility interface requirement. Auxiliary memory is $0(1)$. |
+
+--- 4. Critical Edge Cases Tested
+
+| Test Case | Input `(A, K)` | Expected Output | Mechanical Significance |
+| :--- | :--- | :--- | :--- |
+| **Standard Shift** | `([3, 8, 9, 7, 6]), 3` | `[9, 7, 6, 3, 8]` | Standard multi-shift validation |
+| **Identical Elements** | `([0, 0, 0], 1)` | `[0, 0, 0]` | Value equality verification |
+| **Full Cycle ($K = N$)** | `([1, 2, 3, 4], 4)` | `[1, 2, 3, 4]` | Verifies $4 \pmod 4 = 0$ returns unchanges list |
+| **Empty Array** | `([], 5)` | `[]` | Prevents `ZeroDivsionError` (`5 % 0`) |
+| **Single Elements** | `([1], 99)` | `[]` | Validates $K \gg N$ edge behavior |
+| **Oversized Shift ($K > N$)** | `([1, 2], 3)` | `[2, 1]` | Confirms $3 \pmod 2 = 1$ reduction |
+| **Zero Shift ($K = 0$)** | `([1, 2, 3, 4, 5], 0)` | `[1, 2, 3, 4, 5]` | Verifies immediate no-op return |
+| **Negative Values** | `([-1, -2, -3, -4], 2)` | `[-3, -4, -1, -2]` | Ensures signs do not corrupt slicing indexes |

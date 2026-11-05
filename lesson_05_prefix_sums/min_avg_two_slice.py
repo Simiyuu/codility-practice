@@ -20,5 +20,18 @@ def solution(A):
 
 
 if __name__ == "__main__":
-    print(solution([4, 2, 2, 5, 1, 5, 8])) # Expected output: 1 (slice [2, 2] has avg 2.0)
+    test_cases = [
+        ([4, 2, 2, 5, 1, 5, 8], 1, "Standard Codility example (slice [2, 2] has avg 2.0)"),
+        ([1, 2], 0, "Minimal array size N=2"),
+        ([5, 6, 1, 4, 1, 7], 2, "Length-3 slice strictly optimal ([1, 4, 1] avg=2.0 vs len-2 avgs=2.5)"),
+        ([-3, -5, -8, -4, -10], 2, "All negative numbers (slice [-8, -4, -10] avg=-7.33 vs [-8, -4] avg=-6.0)"),
+        ([10, -10, 10, -10], 0, "Alternating signs testing tie-breaking at index 0"),
+        ([2, 2, 2, 2], 0, "All identical values returning earliest index"),
+    ]
+
+    for arr, expected, note in test_cases:
+        actual = solution(arr)
+        status = "PASS" if actual == expected else "FAIL"
+        print(f"[{status}] A={str(arr):<26} | Expected: {expected:<2} | Got: {actual:<2} | {note}")
+        
 

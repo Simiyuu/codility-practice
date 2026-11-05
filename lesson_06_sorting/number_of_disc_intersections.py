@@ -26,6 +26,22 @@ def solution(A):
     return intersections
 
 if __name__ == "__main__":
-    print(solution([1, 5, 2, 1, 4, 0])) # Expected output: 11
-    
+    max_radius = 2_147_483_647
+    test_cases = [
+        ([1, 5, 2, 1, 4, 0], 11, "Standard Codility example with mixed radius overlap"),
+        ([], 0, "Empty array boundary N=0"),
+        ([10], 0, "Single disc N=1 (pairs require at least 2 discs)"),
+        ([0, 0, 0, 0], 0, "Zero-radius point discs with no shared coordinate boundaries"),
+        ([1, 0, 1], 3, "Tnagent contact points touching exactly at boundary coordinate 1"),
+        ([max_radius, max_radius], 1, "Extreme 32-bit signed radius bounds without overflow"),
+        ([10_000] * 5_000, -1, "Exceeding the 10,000,000 limit (5000 discs completely overlapping = 12,497,500 pairs)"),
+    ]
+
+    for arr, expected, note in test_cases:
+        actual = solution(list(arr))
+        status = "PASS" if actual == expected else "FAIL"
+        display_arr = str(arr) if len(arr) <= 6 else f"[{arr[0]}, ..., {arr[-1]}] (len={len(arr)})"
+        print(f"[{status}] A={display_arr:<25} | Expected: {expected:<2} | Got: {actual:<2} | {note }")
+
+        
     

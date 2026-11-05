@@ -29,6 +29,6 @@ if __name__ == "__main__":
     assert solution(32) == 0
     assert solution(529) == 4
     assert solution(20) == 1
-    assert solutoin(15) == 0
+    assert solution(15) == 0
 
     print("\nAll tests passed successfully!")

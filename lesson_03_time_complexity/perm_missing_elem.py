@@ -22,4 +22,5 @@ if __name__ == "__main__":
         actual = solution(arr)
         status = "PASS" if actual == expected else "FAIL"
         print(f"[{status}] A={str(arr):<20} | Expected: {expected:<3} | Got: {actual:<3} | {note}")
+
         

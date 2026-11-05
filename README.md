@@ -407,7 +407,9 @@ A non-empty array `A` consisting of `N` integers is given. Any integer $P$, such
 
 # Codility Lesson 4: Counting Elements
 
-## Problem Description
+## Problem 1: FrogRiverOne
+
+### Problem Description
 * **Context** A small frog wants to get to the opposite bank of a river. The frog is currently at position `o` and wants to reach position `X + 1`. Leaves fall from a tree onto the surface of the river.
 * **Input**
   * An integer `X` representing the target position on the river bank ($1 \le X \le 100,000$).
@@ -440,4 +442,49 @@ def solution(X, A):
             return second
 
     return -1
-    
+```
+
+## Problem 2: PermCheck
+
+### Problem Description
+* **Context:** A non-empty array `A` consisting of $N$ integers is given.
+* **Definition:** A *permutation* is  a sequence containing each element from `1` to `N` once, and only once.
+* **Input Constraints:**
+  * $N$ is an integer within the range $[1 \dots 100,000]$.
+  * Each element of array $A$ is an integer within the range $[1 \dots 1,000,000,000]$.
+* **Goal:** Return `1` if array `A` is a valid permutation, or `0` if it is not.
+
+---
+
+### Algorithmic Intution: $0(N)$ Range and Uniqueness Validation
+
+* **The $0(N \log N)$ Sorting Trap:** Sorting array `A` and checking if $A[i] == i + 1$ takes $0(N \log N)$ time. While functional, it incurs unnecessary runtime overhead compared to an $0(N)$ single-pass evaluation.
+* **Core invariants of a Valid Permutation of Length $N$:**
+  1. Every element $X$ must satisfy $1 \le X \le N$. If any value exceeds $N$ (e.g., $10^9$), it is impossible to form a contiguous sequence from to $N$.
+  2. Every element must be strictly unique (no duplicates).
+  3. The number of unique elements must equal exactly $N$.
+* **Optimal Single-Pass Strategy ($0(N)$ Time, $0(N)$ Space):**
+   * Store seen elements in a hash set.
+   * During iteration, immediately return `0` if an element is greater than $N$ or has already been seen.
+   * If the loop completes without invalidating either rule, every element in $[1 \dots N]$ is guaranteed to be present exactly once. Return `1`.
+
+--- 
+
+### Python 3 Implementation
+
+```python
+def solution(A):
+    n = len (A)
+    seen = set()
+
+    for num in A:
+        # Out-of-bounds check (elements must be within 1 .. N)
+        if num > n:
+            return 0
+        # Duplicate check (elements must appear strictly once)
+        if num in seen:
+            return 0:
+        seen.add(num)
+
+    return 1
+```

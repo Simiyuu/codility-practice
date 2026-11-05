@@ -488,3 +488,64 @@ def solution(A):
 
     return 1
 ```
+## Problem 3: MaxCounters
+
+### Problem Description
+* **Context:** You are given $N$ counters, initially set to $0$, and an array $A$ of $M$ integers containing consecutive operation instructions.
+* **Operations:**
+  * If $A[K] = X$ such that $1 \le X \le N$: Operation is `increase(X)` - counter $X$ is incremented by $1$.
+  * If $A[K] = N + 1$: Operation is `max counter` - all $N$ counters are set to the maximal value of any counter.
+* **Input Constraints:**
+  * $N$ and $M$ are integers within the range $[1 \dots 100,000]$.
+  * Each element of array $A$ is an integer within $[1 \dots N + 1]$.
+* **Goal:** Return an array of $N$ integers representing the final values of the counters after processing all $M$ operations.
+
+--- 
+
+### Algorithmic Intuition: The Lazy Update / Baseline Offset Pattern
+
+* **The $0(N \cdot M)$ Brute Force Trap:**
+  * Naively iterating through all $N$ counters to reassign each element to `current_max` whenever $A[K] = N + 1$ takes $0(N)$ work per `max counter` call.
+  * In the worst case (alternating between increment and `max counter`), the runtime degrades to $0(N \cdot M)$. With $N, M = 100,000$, this requires $10^{10}$ operations, causing a timeout failure on Codility.
+* **The $0(N + M)$ Lazy Evaluation Invariant:**
+  * Instead of updating all $N$ elements immediately upon receiving a `max counter` command, store the value in a baselinetracker variable: `last_max`.
+  * **Lazy Synchronization:** When an individual counter $X$ is targeted by an `increase(X)` operation:
+    1. Check if `counters[X - 1] < last_max`. If it is, catch it up to `last_max` first before incrementing.
+    2. Increment the counter by $1$.
+    3. Update `current_max = max(current_max, counters[X - 1])`.
+  * **Final Sweep:** After processing all $M$ operations, any counter that was not touched since the last `max counter` command remains below `last_max`. Perform a single $0(N)$ pass at the end to lift every counter to at least `last_max`.
+
+  --- 
+
+  ### Python 3 Implementation 
+
+  ```python
+  def solution(N, A):
+    counters = [0] * N
+    current_max = 0
+    last_max = 0
+
+    for op in A:
+        if 1 <= op <= N:
+            idx = op - 1
+            # Lazy catch-up to the last recorded max counter floor
+            if counters[idx] < last_max:
+                counters[idx] = last_max
+
+            counters[idx] += 1
+
+            if counters[idx] > current_max:
+                current_max = counters[idx]
+
+        elif op == N + 1:
+            # Record the new floor without iterating over the array
+            last_max = current_max
+
+    # Final pass to apply lazy updates to untouched counters
+    for i in range(N):
+        if counters[i] < last_max:
+            counters[i] = last_max
+
+    return counters
+
+```

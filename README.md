@@ -547,5 +547,49 @@ def solution(A):
             counters[i] = last_max
 
     return counters
+    ```
 
-```
+## Problem 4: MissingInteger
+
+### Problem Description
+* **Context:** An array `A` consisting of $N$ integers is given.
+* **Goal:** Find and return the smallest positive integer (greater than 0) that does not occur in array `A`.
+* **Input Constraints:**
+  * $N$ is an integer within the range $[1 \dots 100,000]$.
+  * Each element of array `A` is an integer within $[-1,000,000 \dots 1,000,000]$.
+* **Examples:**
+  * `A = [1, 3, 6, 4, 1, 2]` $\rightarrow$ Returns `5.`
+  * `A = [1, 2, 3]` $\rightarrow$ Returns `4`.
+  * `A = [-1, -3]` $\rightarrow$ Returns `1`.
+
+---
+
+### Algorithmic Intuition: The Pigeonhole Principle and Set Filtering
+
+* **The $0(N \log N)$ Sorting Trap:** Sorting array `A` first is intuitive, but incurs an unnecessary $0(N \log N)$ runtime overhead and requires careful navigation around duplicate numbers and negative values.
+* **The Pigeonhole Principle Range Invariant:**
+  * An array of length $N$ can contain at most $N$ distinct positive values.
+  * Therefore, the smallest missing positive integer **must** lie within the bounded range $[1 \dots N + 1]$.
+  * Any non-positive number ($\le 0$) and any positive number strictly greater than $N + 1$ can be completely ignored because they cannot prevent an integer in $[1 \dots N + 1]$ from being the smallest missing value.
+* **Optimal $0(N)$ Hash Set Strategy:**
+  1. Convert array `A` into a hash set of observed values (filtering for positive integers).
+  2. Start a counter at `target = 1`.
+  3. Sequentially query whether `target = 1`
+  4. The first integer not present in the set is mathematically guaranteed to be the minimal missing positive integer.
+
+--- 
+
+### Python 3 Implementation
+
+```python
+def solution(A):
+    # Filter array to unique positive integers
+    seen = {num for num in A if num > 0}
+
+    # Sequentially check starting fro the smallest positive integer
+    target = 1
+    while target in seen:
+        target += 1
+
+    return target
+    

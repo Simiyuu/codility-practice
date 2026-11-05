@@ -25,4 +25,19 @@ def solution(S, P, Q):
     return result
 
 if __name__ == "__main__":
-    print(solution("CAGCCTA", [2, 5, 0], [4, 5, 6])) # Expected output: [2, 4, 1]
+    test_cases = [
+        ("CAGCCTA", [2, 5, 0], [4, 5, 6], [2, 4, 1], "Standard Codility example with mixed slices"),
+        ("ACGT", [0, 1, 2, 3], [0, 1, 2, 3], [1, 2, 3, 4], "Single-nucleotide slices testing each impact factor directly"),
+        ("T", [0], [0], [4], "Single-element string with highest impact factor (T=4)"),
+        ("A", [0], [0], [1], "Single-element string with lowest impact factor (A=1)"),
+        ("TTTTTT", [0, 2], [5, 4], [4, 4], "Homogeneous sequence containing only T"),
+        ("GGGGGG", [1, 0], [3, 5], [3, 3], "Homogeneous sequence containing only G"),
+        ("CCCCAA", [0, 2], [3, 5], [2, 1], "Slices checking boundary transition from C to A"),
+        ("TCGATCGA", [0, 4], [7, 7], [1, 1], "Full and partial spans spanning all 4 nucleotides"),
+    ]
+
+    for s, p, q, expected, note in test_cases:
+        actual = solution(s, p, q)
+        status = "PASS" if actual == expected else "FAIL"
+        print(f"[{status}] S={s:<10} | P={str(p):<12} | Q={str(q):<12} | Expected: {expected} | Got: {actual} | {note}")
+        

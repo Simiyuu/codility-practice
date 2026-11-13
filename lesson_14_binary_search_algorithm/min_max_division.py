@@ -34,7 +34,7 @@ if __name__ == "__main__":
         (2, 10, [3, 3, 3, 3], 6, "All identical elements partitioned into K blocks"),
         (2, 10, [10, 1, 1, 1], 10, "Large leading element constraint boundary"),
         (3, 10, [1, 1, 100, 1], 100, "Single massive outlier element forcing block containment"),
-        (5, 10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 12, "Ascending sequences with K=5 blocks"),
+        (5, 10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 15, "Ascending sequences with K=5 blocks"),
         (50_000, 10, [5] * 100_000, 10, "Max constraint boundary N=100_000, K=50,000 with uniform elements"),
     ]
 

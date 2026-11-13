@@ -16,7 +16,7 @@ def solution(A):
 
     # BFS queue stores tuples of (current_position, jumps_taken)
     queue = deque([(-1, 0)])
-    visited = [False] * n
+    visited = [False] * n 
 
     while queue:
         pos, jumps = queue.popleft()
@@ -28,13 +28,32 @@ def solution(A):
             if next_pos == target:
                 return jumps + 1
 
-        # Valid unvisited leaf within river bounds
-        if 0 <= next_pos < n and A[next_pos] == 1 and not visited[next_pos]:
-            visited[next_pos] = True
-            queue.append((next_pos, jumps + 1))
+            # Valid unvisited leaf within river bounds
+            if 0 <= next_pos < n and A[next_pos] == 1 and not visited[next_pos]:
+                visited[next_pos] = True
+                queue.append((next_pos, jumps + 1))
 
     return -1
 
 if __name__ == "__main__":
-    print(solution([0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0])) # Expected output: 3 (-1 -> 4 -> 6 -> 11)
-    print(solution([0, 0, 0]))                         # Expected output: -1 (unreachable)
+    test_cases = [
+        ([0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0], 3, "Standard Codility example (-1 -> 4 -> 6 -> 11)"),
+        ([], 1, "Empty river boundary N=0 (single jump of distance 1)"),
+        ([0], 1, "Single water title N=1 (single jump of distance 2)"),
+        ([1], 1, "Single leaf title N=1 (direct jump of distance 2)"),
+        ([0, 0, 0, 0], 1, "Direct Fibonacci leap across water N=4 (span 5 = F_5)"),
+        ([0] * 12, 1, "Direct Fibonacci leap across water N=12 (span 13 = F_7)"),
+        ([0, 0, 0], -1, "Unreachable water N=3 (span 4 is non-Fibonacci)"),
+        ([0, 0, 0, 1, 0, 0], -1, "Unreachable leaf at non-Fibonacci offset (index 3)"),
+        ([0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0], 3, "Greedy trap (leaf 7 is a dead end; path -1 -> 4 -> 6 -> 11)"),
+        ([1] * 10, 2, "All leaves N=10 (-1 -> 7 -> 10 in 2 Fibonacci leaps)"),
+        ([0] * 75_024, 1, "Large river N=75,024 crossed in 1 leap (span 75,025 = F_25)"),
+        ([0] * 100_000, -1, "Max constaint N=100,000 with no leaves (unreachable)"),
+    ]
+
+    for arr, expected, note in test_cases:
+        actual = solution(arr)
+        status = "PASS" if actual == expected else "FAIL"
+        display_arr = str(arr) if actual == expected else "FAIL"
+        display_arr = str(arr) if len(str(arr)) <= 24 else f"[len={len(arr)}]"
+        print(f"[{status}] A={display_arr:<24} | Expected: {expected:<3} | Got: {actual:<3} | {note}")

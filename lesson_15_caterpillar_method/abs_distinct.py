@@ -28,6 +28,27 @@ def solution(A):
     return distinct_count
 
 if __name__ == "__main__":
-    print(solution([-5, -3, -1, 0, 3, 6]))  # Expected output: 5 (abs values: 5, 3, 1, 0, 6)
-    print(solution([-5, -2, -1, 0, 1, 3]))  # Expected output: 4 (abs values: 5, 2, 1, 0, 3)
-    
+    test_cases = [
+        ([-5, -3, -1, 0, 3, 6], 5, "Standard Codility example (abs: 5, 3, 1, 0, 6)"),
+        ([-5, -2, -1, 0, 1, 3], 5, "Mixed negatives and positives with duplicate magnitude 1"),
+        ([7], 1, "Minimum boundary N=1 single positive element"),
+        ([-7], 1, "Minimum boundary N=1 single negative element"),
+        ([0], 1, "Minimum boundary N=1 single zero"),
+        ([0, 0, 0, 0], 1, "All zeros"),
+        ([4, 4, 4, 4], 1, "All identical positive elements"),
+        ([-4, -4, -4, -4], 1, "All identical negative elements"),
+        ([-5, -5, -2, 2, 5, 5], 2, "Symmetric negative/positive duplicates"),
+        ([-10, -7, -3, -1], 4, "Strictly negative sorted array"),
+        ([1, 3, 7, 10], 4, "Strictly positive sorted array"),
+        ([-2_147_483_648, -1, 0, 1, 2_147_483_647], 4, "32-bit signed integer min/max extremes"),
+        ([-2_147_483_648, -2_147_483_648], 1, "Duplicate 32-bit signed integer minimum"),
+        (list(range(-50_000, 50_000)), 50_001, "Max constraint boundary N=100,000 spanning -50_000..49,999"),
+    ]
+
+    for arr, expected, note in test_cases:
+        actual = solution(arr)
+        status = "PASS" if actual == expected else "FAIL"
+        display_arr = str(arr) if len(str(arr)) <= 26 else f"[len={len(arr)}]"
+        print(f"[{status}] A={display_arr:<26} | Expected: {expected:<6} | Got: {actual:<6} | {note}")
+        
+        
